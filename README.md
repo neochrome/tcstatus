@@ -9,5 +9,7 @@ Install
 4.    Choose "load unpacked extension"
 5.    Click on Options/or the new gray icon in the toolbar
 6.    Enter you base TeamCity url including basic auth.
+
       E.g: http://username:password@tcserver.local:8080
+
       **Note: don't write any trailing slash (/) in the url**
