@@ -1,8 +1,6 @@
-TeamCity Build Status Extension
-===============================
+How to install
+--------------
 
-Install
--------
 1. Clone this repo
 2. Open chrome and switch to the "extension manager"
 3. Enable "developer mode"
