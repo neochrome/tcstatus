@@ -50,18 +50,14 @@ var openTab = function(url){
 	chrome.tabs.create({url:url});
 };
 
-var defaultOptions = {
-	baseUrl: '',
-	refreshInterval: 40000,
-	retryInterval: 10000
-};
 
 var builds = [];
 
 var update = function(){
+	var options = new Options(localStorage);
 	var buildsUpdated = [];
 	var todo = [];
-	var buildTypesUrl = localStorage.baseUrl + '/httpAuth/app/rest/buildTypes';
+	var buildTypesUrl = options.getBaseUrl() + '/httpAuth/app/rest/buildTypes';
 
 	$.getJSON(buildTypesUrl)
 		.success(function(data){
@@ -80,7 +76,7 @@ var update = function(){
 		badge.unknown();
 		action.options();
 
-		setTimeout(update, localStorage.retryInterval || defaultOptions.retryInterval);
+		setTimeout(update, options.retryInterval);
 	});
 
 	var updateStatuses = function(){
@@ -89,7 +85,7 @@ var update = function(){
 			return;
 		}
 		var buildTypeToCheck = todo.shift();
-		var buildsUrl = localStorage.baseUrl + buildTypeToCheck.href + '/builds?count=1';
+		var buildsUrl = options.getBaseUrl() + buildTypeToCheck.href + '/builds?count=1';
 
 		$.getJSON(buildsUrl)
 			.success(function(data){
@@ -115,7 +111,7 @@ var update = function(){
 		icon.enabled()
 		failed > 0 ? badge.failed(failed) : badge.success();
 		
-		setTimeout(update, localStorage.refreshInterval || defaultOptions.refreshInterval);
+		setTimeout(update, options.refreshInterval);
 	};
 
 };

@@ -1,10 +1,9 @@
 @import url('reset.css');
 
-body {
-	font-family: 'Trebuchet MS';
-	font-size: 14px;
-	padding: 5px;
-}
+body, input, select, textarea, button { font-family: 'Trebuchet MS';	font-size: .9em; }
+body { padding: 0.5em; }
+
+h1 { font-size: 1.5em; font-weight: bold; }
 
 #status li a {
 	text-decoration: none;
@@ -28,6 +27,14 @@ body {
 #status li.success { background-image: url('../images/success.gif'); }
 #status li.failure { background-image: url('../images/failure.gif'); }
 
-#options label, #options button{
-	display: block;
-}
+#options fieldset {	float: left; padding: .5em; margin: .5em; }
+#options fieldset, #options input, #options button, #options .message { border-radius: .3em; border: .1em solid #ccc; }
+#options legend { margin: 0 .2em; padding: 0 .3em; }
+#options li {	display: block; }
+#options label { width: 8em; display: inline-block; }
+#options input { width: 10em; display: inline-block; background-color: #cfc; padding: .1em .3em; }
+#options input[type=checkbox] { width: 1em; }
+#options button {	clear: both; display: block; background-color: #ccc; width: 8em; }
+#options button:hover { background-color: #eee; }
+#options :invalid { background-color: #fcc; }
+#options .message {	display: none; font-size: 1.2em; margin: 2em; padding: 1em; background-color: #ffe; }

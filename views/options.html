@@ -1,37 +1,77 @@
-<script src="../lib/jquery-1.5.2.min.js" type="text/javascript"></script>
 <link href="styles.css" rel="Stylesheet" type="text/css"/>
 
-<h1>Team City Status</h1>
-<fieldset id="options">
-	<legend>Options</legend>
+<h1>Team City Status Notifier</h1>
+<form id="options">
+	<fieldset>
+		<legend>Connection</legend>
+		<ul>
+			<li>
+				<input id="use-ssl" type="checkbox"/>
+				<label for="use-ssl">Use ssl (https)</label>
+			</li>
+			<li>
+				<label for="host">Host</label>
+				<input id="host" type="text" pattern="\w+[\w-]*(?:\.\w+[\w-]*)*" required="required"/ >
+			</li>
+			<li>
+				<label for="port">Port</label>
+				<input id="port" type="text" pattern="\d+" required="required"/>
+			</li>
+			<li>
+				<label for="username">Username</label>
+				<input id="username" type="text" pattern="\w+" required="required"/>
+			</li>
+			<li>
+				<label for="password">Password</label>
+				<input id="password" type="password"/>
+			</li>
+		</ul>
+	</fieldset>
 
-	<label for="base-url">Base url (including basic auth)</label>
-	<input id="base-url" name="base-url" type="text"/>
-	
-	<label for="refresh-interval">Refresh interval</label>
-	<input id="refresh-interval" name="refresh-interval" type="text"/> ms
-	
-	<label for="retry-interval">Retry interval</label>
-	<input id="retry-interval" name="retry-interval" type="text"/> ms
-	
-	<button onclick="save()">Save</button>
-
-	<div id="saved" style="display: none">Saved</div>
-</fieldset>
-
-<script type="text/javascript">
-	$(function(){
-		var defaultOptions = chrome.extension.getBackgroundPage().defaultOptions;
-		$('#base-url').val(localStorage.baseUrl || defaultOptions.baseUrl);
-		$('#refresh-interval').val(localStorage.refreshInterval || defaultOptions.refreshInterval);
-		$('#retry-interval').val(localStorage.retryInterval || defaultOptions.retryInterval);
-	});
-	function save(){
-		localStorage.baseUrl = $('#base-url').val();
-		localStorage.refreshInterval = $('#refresh-interval').val();
-		localStorage.retryInterval = $('#retry-interval').val();
+	<fieldset>
+		<legend>Options</legend>
+		<ul>
+			<li>
+				<label for="refresh-interval">Refresh interval</label>
+				<input id="refresh-interval" name="refresh-interval" type="text" pattern="\d+" required="required"/> ms
+			</li>
+			<li>
+				<label for="retry-interval">Retry interval</label>
+				<input id="retry-interval" name="retry-interval" type="text" pattern="\d+" required="required"/> ms
+			</li>
+		</ul>
+		</fieldset>
+		<button>Save</button>
 		
-		$('#saved').fadeIn('fast');
+		<div id="saved" class="message">Options saved</div>
+</form>
+
+
+<script src="../lib/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="options.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var options = new Options(localStorage);
+
+	$('#use-ssl').prop('checked', options.useSsl);
+	$('#host').val(options.host);
+	$('#port').val(options.port);
+	$('#username').val(options.username);
+	$('#password').val(options.password);
+	$('#refresh-interval').val(options.refreshInterval);
+	$('#retry-interval').val(options.retryInterval);
+
+	$('#options').submit(function(event){
+		event.preventDefault();
+		options.useSsl = $('#use-ssl').prop('checked');
+		options.host = $('#host').val();
+		options.port = $('#port').val();
+		options.username = $('#username').val();
+		options.password = $('#password').val();
+		options.refreshInterval = $('#refresh-interval').val();
+		options.retryInterval = $('#retry-interval').val();
+		options.save(localStorage);
+
+		$('#saved').fadeIn('fast').delay(1000).fadeOut('slow');
 		chrome.extension.getBackgroundPage().update();
-	}
+	});
 </script>
