@@ -1,6 +1,6 @@
 {
 	"name":"Team City Status Notifier",
-	"version":"0.0.1",
+	"version":"0.0.2",
 	"update_url":"https://github.com/neochrome/tcstatus/raw/master/updates.xml",
 	"homepage_url":"https://github.com/neochrome/tcstatus",
 	"description":"Shows the current status of build configurations on your Team City build server.",
