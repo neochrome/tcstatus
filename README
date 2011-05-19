@@ -1,12 +1,21 @@
-How to install
---------------
+Installation
+============
+There are two ways of installing - from source or package.
 
-1. Clone or download a tarball/zip of this repo
-2. Open chrome and switch to the "extension manager"
-3. Enable "developer mode"
-4. Choose "load unpacked extension" and select the directory where you put the files
-5. Click on Options/or the gray Team City icon in the toolbar
-6. Enter you base TeamCity url including basic auth.
-   E.g: http://username:password@tcserver.local:8080
+From source
+-----------
+1. Clone into this repo or download and extract a zip/tarball version
+2. Switch to "extension manager" & enable "developer mode"
+3. Choose "load unpacked extension" and select the directory where you put the files
 
-   ** Note: don't write any trailing slash (/) in the url **
+From package
+------------
+1. Download the latest binary package (.crx)
+2. Allow installation
+   ** note: from now on the extension should auto update whenever a new version is released **   
+
+Setup
+=====
+1. Right-click on the toolbar icon and choose "options"
+2. Enter connection details
+3. Click save to persist changes and activate the extension
