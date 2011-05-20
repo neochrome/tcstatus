@@ -62,13 +62,13 @@
 
 	$('#options').submit(function(event){
 		event.preventDefault();
-		options.useSsl = $('#use-ssl').prop('checked');
-		options.host = $('#host').val();
-		options.port = $('#port').val();
-		options.username = $('#username').val();
-		options.password = $('#password').val();
+		options.useSsl          = $('#use-ssl').prop('checked');
+		options.host            = $('#host').val();
+		options.port            = $('#port').val();
+		options.username        = $('#username').val();
+		options.password        = $('#password').val();
 		options.refreshInterval = $('#refresh-interval').val();
-		options.retryInterval = $('#retry-interval').val();
+		options.retryInterval   = $('#retry-interval').val();
 		options.save(localStorage);
 
 		$('#saved').fadeIn('fast').delay(1000).fadeOut('slow');

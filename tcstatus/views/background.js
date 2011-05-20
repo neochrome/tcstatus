@@ -88,7 +88,8 @@ var update = function(){
 		var buildsUrl = options.getBaseUrl() + buildTypeToCheck.href + '/builds?count=1';
 
 		$.getJSON(buildsUrl)
-			.success(function(data){
+		  .success(function(data){
+				if(typeof data.build === 'undefined') { return; }
 				var build = data.build[0];
 				buildsUpdated.forEach(function(buildType){
 					if(build.buildTypeId === buildType.id){

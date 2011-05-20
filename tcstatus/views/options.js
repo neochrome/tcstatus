@@ -12,10 +12,13 @@
 	};
 
 	$.Options = function(storage){
-		var stored = JSON.parse(storage.options || '{}');
-		for(var p in defaults){
-			this[p] = typeof stored[p] === 'undefined' ? defaults[p] : stored[p];
-		}
+		this.useSsl          = typeof storage.useSsl          === 'undefined' ? defaults.useSsl          : storage.useSsl === '1';
+		this.host            = typeof storage.host            === 'undefined' ? defaults.host            : storage.host;
+		this.port            = typeof storage.port            === 'undefined' ? defaults.port            : parseInt(storage.port, 10);
+		this.username        = typeof storage.username        === 'undefined' ? defaults.username        : storage.username;
+		this.password        = typeof storage.password        === 'undefined' ? defaults.password        : storage.password;
+		this.refreshInterval = typeof storage.refreshInterval === 'undefined' ? defaults.refreshInterval : parseInt(storage.refreshInterval, 10);
+		this.retryInterval   = typeof storage.retryInterval   === 'undefined' ? defaults.retryInterval   : parseInt(storage.retryInterval, 10);
 	};
 
 	$.Options.prototype.getBaseUrl = function(){
@@ -23,6 +26,12 @@
 	};
 
 	$.Options.prototype.save = function(storage){
-		storage.options = JSON.stringify(this);
+		storage.useSsl          = this.useSsl ? '1': '0';
+		storage.host            = this.host;
+		storage.port            = this.port;
+		storage.username        = this.username;
+		storage.password        = this.password;
+		storage.refreshInterval = this.refreshInterval;
+		storage.retryInterval   = this.retryInterval;
 	};
 })(this);
