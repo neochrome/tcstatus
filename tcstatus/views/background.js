@@ -26,6 +26,10 @@ var badge = {
 	clear: function(){
 		this._text('');
 	},
+	test: function(){
+		this._text('test');
+		this._color([190,190,190,230]);
+	},
 	_text: function(text){
 		chrome.browserAction.setBadgeText({text: text});
 	},
@@ -50,10 +54,23 @@ var openTab = function(url){
 	chrome.tabs.create({url:url});
 };
 
+var noUpdate = false;
+var test = function(){
+	badge.test();
+	icon.enabled();
+	action.status();
+	noUpdate = true;
+	builds = [];
+	var statuses = ['success','failure','unknown'];
+	for(var i = 0; i < 10; i++){
+		builds.push({status:statuses[i % 3], name:'a build name'});
+	};
+};
 
 var builds = [];
 
 var update = function(){
+	if(noUpdate){ return; }
 	var options = new Options(localStorage);
 	var buildsUpdated = [];
 	var todo = [];
@@ -61,6 +78,7 @@ var update = function(){
 
 	$.getJSON(buildTypesUrl)
 		.success(function(data){
+			if(noUpdate){ return; }
 			buildsUpdated = data.buildType.slice();
 			buildsUpdated.forEach(function(buildType){ buildType.status = 'unknown'; });
 			todo = data.buildType.slice();
@@ -71,6 +89,7 @@ var update = function(){
 			updateStatuses();
 		})
 	.error(function(){
+		if(noUpdate){ return; }
 		console.error('failed to retrieve build types from: ' + buildTypesUrl);
 	
 		icon.disabled();
@@ -81,6 +100,7 @@ var update = function(){
 	});
 
 	var updateStatuses = function(){
+		if(noUpdate){ return; }
 		if(todo.length === 0) {
 			updateCompleted();
 			return;
@@ -90,6 +110,7 @@ var update = function(){
 
 		$.getJSON(buildsUrl)
 		  .success(function(data){
+				if(noUpdate){ return; }
 				if(typeof data.build === 'undefined') { return; }
 				var build = data.build[0];
 				buildsUpdated.forEach(function(buildType){
@@ -105,6 +126,7 @@ var update = function(){
 	};
 
 	var updateCompleted = function(){
+		if(noUpdate){ return; }
 		builds = buildsUpdated;
 		var failed = 0;
 		builds.forEach(function(x){

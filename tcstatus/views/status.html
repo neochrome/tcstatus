@@ -6,8 +6,8 @@
 	<ul>
 		{{each(i, build) builds}}
 		<li class="${build.status}">
-			<a href="${build.webUrl}">
-				<span class="icon">${symbolFor(build.status)}</span>
+		<a href="${build.webUrl}" title="${build.status}">
+			<span class="icon">${symbolFor(build.status)}</span>
 				${build.projectName} - ${build.name}
 			</a>
 		</li>

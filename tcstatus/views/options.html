@@ -6,8 +6,8 @@
 		<legend>Connection</legend>
 		<ul>
 			<li>
-				<input id="use-ssl" type="checkbox"/>
 				<label for="use-ssl">Use ssl (https)</label>
+				<input id="use-ssl" type="checkbox"/>
 			</li>
 			<li>
 				<label for="host">Host</label>
@@ -32,12 +32,12 @@
 		<legend>Options</legend>
 		<ul>
 			<li>
-				<label for="refresh-interval">Refresh interval</label>
-				<input id="refresh-interval" name="refresh-interval" type="text" pattern="\d+" required="required"/> ms
+				<label for="refresh-interval">Refresh interval (ms)</label>
+				<input id="refresh-interval" name="refresh-interval" type="text" pattern="\d+" required="required"/>
 			</li>
 			<li>
-				<label for="retry-interval">Retry interval</label>
-				<input id="retry-interval" name="retry-interval" type="text" pattern="\d+" required="required"/> ms
+				<label for="retry-interval">Retry interval (ms)</label>
+				<input id="retry-interval" name="retry-interval" type="text" pattern="\d+" required="required"/>
 			</li>
 		</ul>
 		</fieldset>
@@ -71,7 +71,7 @@
 		options.retryInterval   = $('#retry-interval').val();
 		options.save(localStorage);
 
-		$('#saved').fadeIn('fast').delay(1000).fadeOut('slow');
+		$('#saved').fadeIn(300).delay(3000).fadeOut(1000);
 		chrome.extension.getBackgroundPage().update();
 	});
 </script>

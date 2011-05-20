@@ -3,7 +3,7 @@
 /* typography */
 body, input, select, textarea, button { font-family: 'Trebuchet MS'; font-size: .9em; }
 h1 { font-size: 1.5em; font-weight: bold; }
-
+.message { font-size: 1.2em; }
 #status li a { text-decoration: none; }
 #status span.icon { font-family: 'Impact', Gadget, sans-serif; font-weight: bold; }
 
@@ -11,47 +11,76 @@ h1 { font-size: 1.5em; font-weight: bold; }
 /* layout */
 body { padding: 0.5em; }
 li { display: block; }
-fieldset, input, button, .message, .icon { border-radius: .3em; border-width: .1em; border-style: solid; }
-
-#status li { height: 1.7em; margin: .5em 0; white-space: nowrap; }
+fieldset, input, button, legend, .message, .icon { border-radius: .3em; border-width: .1em; border-style: solid; }
+input, label { display: inline-block; }
+#status li { height: 1.7em; margin-bottom: .5em; white-space: nowrap; }
 #status li a { display: block; height:100%; border-radius: .3em; padding: .3em .5em; }
 #status span.icon { display: inline-block; width: 1.2em; height: 1.2em; margin-right: .5em; padding: .2em; text-align: center; }
 
-#options fieldset {	float: left; padding: .5em; margin: .5em; }
-#options legend { margin: 0 .2em; padding: 0 .3em; }
-#options label { width: 8em; display: inline-block; }
-#options input { width: 10em; display: inline-block; padding: .1em .3em; }
-#options input[type=checkbox] { width: 1em; }
-#options button {	clear: both; display: block; width: 8em; }
-#options .message {	display: none; font-size: 1.2em; margin: 2em; padding: 1em; }
+#options fieldset { float: left; padding: .5em .9em; margin: 1em .5em; }
+#options legend { margin: 0 .2em; padding: .2em .4em; }
+#options li { float: none; clear: left; }
+#options label { width: 10em; float: left; margin-top: .35em; white-space: nowrap; }
+#options input { width: 10em; padding: .1em .3em; float: left; }
+#options input[type=checkbox] { width: 1.2em; height: 1.2em; padding: 0; -khtml-appearance: none; }
+#options button {	clear: both; float: left; width: 10em; margin: 0 .5em; padding: .3em; }
+#options .message {	display: none; float:left; margin: 0 .5em; padding: .7em 2em; }
 
 
 /* colors */
 #status li a { color: #000; }
-#status li a:hover { background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#eee)); -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
+#status li a:hover {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#eee));
+ 	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
+}
 
-#status li span.icon { -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
+#status li span.icon {
+	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
+	color: rgba(255,255,255,.5); 
+	text-shadow: .1em .1em .2em rgba(200,200,200,.8);
+}
 #status li a:hover span.icon { -webkit-box-shadow: none; }
 #status li.success span.icon {
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cfc), to(#0c0)); 
 	border-color: rgba(100,190,100,.8);
- 	color: rgba(255,255,255,.8);
 }
 #status li.failure span.icon { 
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fcc), to(#c00)); 
 	border-color: rgba(190,100,100,.8); 
-	color: rgba(255,255,255,.8); 
 }
 #status li.unknown span.icon { 
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#ccc)); 
 	border-color: rgba(160,160,160,.8); 
-	color: rgba(130,130,130,.8); 
 }
 
-#options fieldset, #options input, #options button, #options .message { border-color: #ccc; }
-#options .message { background-color: #ffe; }
+#options fieldset, #options input, #options button, #options .message, #options legend { border-color: #ccc; }
+#options fieldset, #options legend, #options input[type=checkbox], #options button, #options .message {
+	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
+}
+#options legend { background-color: rgba(230,230,230,.5); }
+#options .message {
+	background: -webkit-gradient(linear, 0 0, 0 80%, from(#ffe), to(#ff9)); 
+	border-color: rgba(255,255,160,.8); 
+	color: #000;
+}
 #options input { background-color: #cfc; }
 #options :invalid { background-color: #fcc; }
-#options button {	background-color: #ccc; }
-#options button:hover { background-color: #eee; }
+#options button { 
+	background: -webkit-gradient(linear, 0 0, 0 50%, from(#eee), to(#ccc)); 
+	border-color: rgba(160,160,160,.8); 
+	color: #000;
+}
+#options button:hover {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#ccc));
+	color: #666;
+}
+#options input[type=checkbox] {
+ 	-khtml-appearance: none;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#ccc)); 
+	border-color: rgba(160,160,160,.8); 
+}
+#options input[type=checkbox]:hover, #options input[type=checkbox]:checked {
+	background: -webkit-gradient(linear, 0 0, 0 50%, from(#eee), to(#ccc));
+	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.45);
+}
 
