@@ -62,6 +62,7 @@ var update = function(){
 	$.getJSON(buildTypesUrl)
 		.success(function(data){
 			buildsUpdated = data.buildType.slice();
+			buildsUpdated.forEach(function(buildType){ buildType.status = 'unknown'; });
 			todo = data.buildType.slice();
 
 			icon.enabled();

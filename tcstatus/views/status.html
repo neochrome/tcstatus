@@ -7,6 +7,7 @@
 		{{each(i, build) builds}}
 		<li class="${build.status}">
 			<a href="${build.webUrl}">
+				<span class="icon">${symbolFor(build.status)}</span>
 				${build.projectName} - ${build.name}
 			</a>
 		</li>
@@ -17,6 +18,14 @@
 <div id="status"></div>
 
 <script type="text/javascript">
+	function symbolFor(status){
+		switch(status){
+			case 'success': return '&radic;';
+			case 'failure': return '!';
+			case 'unknown': return '?';
+		}
+	};
+
 	$('#status').empty();
 	$('#template')
 		.tmpl({builds:chrome.extension.getBackgroundPage().builds})

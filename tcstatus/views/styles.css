@@ -1,40 +1,57 @@
 @import url('reset.css');
 
-body, input, select, textarea, button { font-family: 'Trebuchet MS';	font-size: .9em; }
-body { padding: 0.5em; }
-
+/* typography */
+body, input, select, textarea, button { font-family: 'Trebuchet MS'; font-size: .9em; }
 h1 { font-size: 1.5em; font-weight: bold; }
 
-#status li a {
-	text-decoration: none;
-	display: block;
-	color: #000;
-	padding: 2px;
-	border-radius: 3px;
-}
-#status li a:hover { background-color: #eee; }
+#status li a { text-decoration: none; }
+#status span.icon { font-family: 'Impact', Gadget, sans-serif; font-weight: bold; }
 
-#status li {
-	display: block;
-	padding: 1px 1px 1px 20px;
-	margin: 2px;
-	height: 20px;
-	white-space: nowrap;
-	background-position: 2px 2px;
-	background-repeat: no-repeat;
-}
 
-#status li.success { background-image: url('../images/success.gif'); }
-#status li.failure { background-image: url('../images/failure.gif'); }
+/* layout */
+body { padding: 0.5em; }
+li { display: block; }
+fieldset, input, button, .message, .icon { border-radius: .3em; border-width: .1em; border-style: solid; }
+
+#status li { height: 1.7em; margin: .5em 0; white-space: nowrap; }
+#status li a { display: block; height:100%; border-radius: .3em; padding: .3em .5em; }
+#status span.icon { display: inline-block; width: 1.2em; height: 1.2em; margin-right: .5em; padding: .2em; text-align: center; }
 
 #options fieldset {	float: left; padding: .5em; margin: .5em; }
-#options fieldset, #options input, #options button, #options .message { border-radius: .3em; border: .1em solid #ccc; }
 #options legend { margin: 0 .2em; padding: 0 .3em; }
-#options li {	display: block; }
 #options label { width: 8em; display: inline-block; }
-#options input { width: 10em; display: inline-block; background-color: #cfc; padding: .1em .3em; }
+#options input { width: 10em; display: inline-block; padding: .1em .3em; }
 #options input[type=checkbox] { width: 1em; }
-#options button {	clear: both; display: block; background-color: #ccc; width: 8em; }
-#options button:hover { background-color: #eee; }
+#options button {	clear: both; display: block; width: 8em; }
+#options .message {	display: none; font-size: 1.2em; margin: 2em; padding: 1em; }
+
+
+/* colors */
+#status li a { color: #000; }
+#status li a:hover { background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#eee)); -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
+
+#status li span.icon { -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
+#status li a:hover span.icon { -webkit-box-shadow: none; }
+#status li.success span.icon {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cfc), to(#0c0)); 
+	border-color: rgba(100,190,100,.8);
+ 	color: rgba(255,255,255,.8);
+}
+#status li.failure span.icon { 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fcc), to(#c00)); 
+	border-color: rgba(190,100,100,.8); 
+	color: rgba(255,255,255,.8); 
+}
+#status li.unknown span.icon { 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#ccc)); 
+	border-color: rgba(160,160,160,.8); 
+	color: rgba(130,130,130,.8); 
+}
+
+#options fieldset, #options input, #options button, #options .message { border-color: #ccc; }
+#options .message { background-color: #ffe; }
+#options input { background-color: #cfc; }
 #options :invalid { background-color: #fcc; }
-#options .message {	display: none; font-size: 1.2em; margin: 2em; padding: 1em; background-color: #ffe; }
+#options button {	background-color: #ccc; }
+#options button:hover { background-color: #eee; }
+
