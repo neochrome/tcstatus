@@ -1,1 +1,10 @@
 [x] Track usage using Google Analytics
+[ ] Toaster notifications
+    [ ] Connectivity issues
+    [ ] Failed builds
+    [ ] Configurable, per build?
+[ ] Always show status popup when clicking on icon
+    [ ] Display initial message when no status(es) available
+
+[ ] Sorting builds
+[ ] Visible/ignored builds configuration
