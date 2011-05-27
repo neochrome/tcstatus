@@ -1,12 +1,6 @@
 Installation
 ============
-There are two ways of installing - from source or package.
-
-From source
------------
-1. Clone into this repo or download and extract a zip/tarball version
-2. Switch to "extension manager" & enable "developer mode"
-3. Choose "load unpacked extension" and select the directory where you put the files
+There are two ways of installing - from packaged binary or source.
 
 From package
 ------------
@@ -14,8 +8,20 @@ From package
 2. Allow installation
    ** note: from now on the extension should auto update whenever a new version is released **   
 
+From source
+-----------
+1. Clone into this repo or download and extract a zip/tarball version
+2. Switch to "extension manager" & enable "developer mode"
+3. Choose "load unpacked extension" and select the directory where you put the files
+
 Setup
 =====
 1. Right-click on the toolbar icon and choose "options"
 2. Enter connection details
 3. Click save to persist changes and activate the extension
+
+Tracking
+========
+I'm currently using Google Analytics for basic usage tracking. It's all anonymous and the purpose
+is to be able to see browser/extension version and rough geographical dispersion.
+If you fork this repo, please switch to your own tracking id. It's in the tcstatus/views/analytics.js file.
