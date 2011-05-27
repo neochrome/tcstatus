@@ -18,8 +18,14 @@
 	};
 })(this);
 
+var getAppId = function(){
+	var match = chrome.extension.getURL('').match(/:\/\/([a-z]+)\/);
+	return	match ? match[1] : undefined;
+};
+
 $.getJSON(chrome.extension.getURL('/manifest.json')).success(function(manifest){
 	trackingFor('UA-23600922-2')
+	.on('about','appid',getAppId())
 	.on('about','version',manifest.version)
 	.send();
 });
