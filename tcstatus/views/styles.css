@@ -5,7 +5,6 @@ body, input, select, textarea, button { font-family: 'Trebuchet MS'; font-size: 
 h1 { font-size: 1.5em; font-weight: bold; }
 .message { font-size: 1.2em; }
 #status li a { text-decoration: none; }
-#status span.icon { font-family: 'Impact', Gadget, sans-serif; font-weight: bold; }
 
 
 /* layout */
@@ -34,11 +33,7 @@ input, label { display: inline-block; }
  	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
 }
 
-#status li span.icon {
-	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
-	color: rgba(255,255,255,.5); 
-	text-shadow: .1em .1em .2em rgba(200,200,200,.8);
-}
+#status li span.icon { -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
 #status li a:hover span.icon { -webkit-box-shadow: none; }
 #status li.success span.icon {
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cfc), to(#0c0)); 
