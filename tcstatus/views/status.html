@@ -33,6 +33,6 @@
 		.appendTo('#status');
 	$('#status li a').click(function(event){
 		event.preventDefault();
-		chrome.extension.getBackgroundPage().openTab($(this).attr('href'));
+		chrome.tabs.create({url:$(this).attr('href')});
 	});
 </script>
