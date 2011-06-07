@@ -52,6 +52,7 @@
 <script src="options.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var options = new Options(localStorage);
+	options.load();
 
 	$('#use-ssl').prop('checked', options.useSsl);
 	$('#host').val(options.host);
@@ -70,9 +71,9 @@
 		options.password        = $('#password').val();
 		options.refreshInterval = $('#refresh-interval').val();
 		options.retryInterval   = $('#retry-interval').val();
-		options.save(localStorage);
+		options.save();
 
 		$('#saved').fadeIn(300).delay(3000).fadeOut(1000);
-		chrome.extension.getBackgroundPage().update();
+		chrome.extension.getBackgroundPage().client.stop().start();
 	});
 </script>
