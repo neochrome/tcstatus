@@ -1,6 +1,8 @@
 var a = require('./../tcstatus/views/fsm.js');
 
 describe('a fsm', function(){
+	var machine;
+	
 	describe('when created', function(){
 		beforeEach(function(){
 			machine = a.fsm();
@@ -9,8 +11,6 @@ describe('a fsm', function(){
 		it('should not have any initial state set', function(){
 			expect(machine.toString()).toBe('');
 		});
-
-		var machine;
 	});
 
 	describe('with some states', function(){
@@ -26,7 +26,7 @@ describe('a fsm', function(){
 			expect(machine.toString()).toBe('STARTED');
 		});
 
-		it('should fail when setting unknown initial state', function(){
+		it('should fail when setting unknown state', function(){
 			expect(function(){ machine.UNKNOWN(); }).toThrow();
 		});
 
@@ -36,17 +36,15 @@ describe('a fsm', function(){
 			expect(machine.toString()).toBe('STOPPED');
 		});
 
-		it('should fail for unknown event', function(){
+		it('should fail for unknown transition event', function(){
 			machine.STARTED();
 			expect(function(){ machine.idle(); }).toThrow();
 		});
 
-		it('should fail for unknown transition', function(){
+		it('should fail when transitioning to for unknown state', function(){
 			machine.STOPPED();
 			expect(function(){ machine.idle(); }).toThrow();
 		});
-
-		var machine;
 	});
 
 	describe('when acting as an on/off switch', function(){
@@ -63,8 +61,21 @@ describe('a fsm', function(){
 			machine.toggle();
 			expect(machine.toString()).toBe('OFF');
 		});
+	});
 
-		var machine;
+	describe('when set up to receive args to transition event', function(){
+		beforeEach(function(){
+			machine = a.fsm({
+				INIT:{ next:function(arg){ this.argPassed = arg; this.NEXT(); } },
+				NEXT:{ }
+			}).INIT();
+			machine.argPassed = undefined;
+		});
+
+		it('should receive args passed to transition event', function(){
+			machine.next(42);
+			expect(machine.argPassed).toBe(42);
+		});
 	});
 
 });
