@@ -28,8 +28,7 @@
 
 	function invoke(event){
 		return function(){
-			this._state = this._state[event].call(this._states);
-			if(!this._state){ throw 'Transition to unknown state'; }
+			this._state[event].apply(this, arguments);
 			return this;
 		};
 	}

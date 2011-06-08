@@ -16,8 +16,8 @@ describe('a fsm', function(){
 	describe('with some states', function(){
 		beforeEach(function(){
 			machine = a.fsm({
-				STARTED:{ stop: function(){ return this.STOPPED; } },
-				STOPPED:{ idle: function(){ return this.IDLING; } }
+				STARTED:{ stop: function(){ this.STOPPED(); } },
+				STOPPED:{ idle: function(){ this.IDLING(); } }
 			});
 		});
 
@@ -52,8 +52,8 @@ describe('a fsm', function(){
 	describe('when acting as an on/off switch', function(){
 		beforeEach(function(){
 			machine = a.fsm({
-				OFF:{ toggle:function(){ return this.ON; } },
-				ON:{ toggle:function(){ return this.OFF; } }
+				OFF:{ toggle:function(){ this.ON(); } },
+				ON:{ toggle:function(){ this.OFF(); } }
 			}).OFF();
 		});
 
