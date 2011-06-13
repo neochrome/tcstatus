@@ -38,25 +38,13 @@ var badge = {
 	}
 };
 
-badge.unknown();
-var builds = [];
-var options = new Options(localStorage);
-
-var client = new TCClient(options)
-.success(function(updatedBuilds){
-	builds = updatedBuilds;
-	var failed = 0;
-	builds.forEach(function(x){
-		if(x.status === 'failure'){ failed++; }
-	});
-	icon.enabled()
-	failed > 0 ? badge.failed(failed) : badge.success();
-})
-.failure(function(message){
-	icon.disabled();
-	badge.unknown();
-})
-.start();
+var toast = function(title, text){
+	var notification = webkitNotifications.createNotification('../images/icon128.png', title, text);
+	notification.show();
+	setTimeout((function(notification){
+  	return function() { notification.cancel(); };
+ 	})(notification), 10000);
+};
 
 var test = function(){
 	client.stop();
@@ -68,3 +56,63 @@ var test = function(){
 		builds.push({status:statuses[i % 3], name:'a build name'});
 	};
 };
+
+
+var builds = [];
+
+var states = fsm({
+	POLLING:{
+		success: function(updatedBuilds){
+			var failed = 0;
+			updatedBuilds.forEach(function(x){
+				if(x.status === 'failure'){ failed++; }
+			});
+			icon.enabled()
+			failed > 0 ? badge.failed(failed) : badge.success();
+			
+			var old = {};
+			builds.forEach(function(x){ old[x.id] = x; });
+			updatedBuilds.forEach(function(x){
+				if(x.status === 'failure' && (typeof old[x.id] === 'undefined' || old[x.id].status !== 'failure' )){
+					toast('Failing build', x.name);
+				}
+			});
+			builds = updatedBuilds;
+			
+			this.POLLING();
+		},
+		failure: function(){
+			icon.disabled();
+			badge.unknown();
+			toast('Communication error', 'Couldn\'t retreive build statuses. Please check configuration options.');
+			
+			this.ERROR();
+		}
+	},
+	ERROR:{
+		success: function(updatedBuilds){
+			this.POLLING();
+			this.success(updatedBuilds);
+		},
+		failure: function(){
+			this.ERROR();
+		}
+	}
+});
+
+var options = new Options(localStorage);
+var client = new TCClient(options)
+.success(function(updatedBuilds){
+	states.success(updatedBuilds);
+})
+.failure(function(message){
+	states.failure();
+});
+
+function reset(){
+	badge.unknown();
+	client.stop();
+	states.POLLING();
+	client.start();
+}
+reset();
