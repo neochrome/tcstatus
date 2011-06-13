@@ -79,25 +79,26 @@ var states = fsm({
 			});
 			builds = updatedBuilds;
 			
-			return this.POLLING;
+			this.POLLING();
 		},
 		failure: function(){
 			icon.disabled();
 			badge.unknown();
 			toast('Communication error', 'Couldn\'t retreive build statuses. Please check configuration options.');
 			
-			return this.ERROR;
+			this.ERROR();
 		}
 	},
 	ERROR:{
 		success: function(updatedBuilds){
-			return this.POLLING.success(updatedBuilds);
+			this.POLLING();
+			this.success(updatedBuilds);
 		},
 		failure: function(){
-			return this.ERROR;
+			this.ERROR();
 		}
 	}
-}).POLLING();
+});
 
 var options = new Options(localStorage);
 var client = new TCClient(options)
@@ -106,6 +107,12 @@ var client = new TCClient(options)
 })
 .failure(function(message){
 	states.failure();
-})
-.start();
-badge.unknown();
+});
+
+function reset(){
+	badge.unknown();
+	client.stop();
+	states.POLLING();
+	client.start();
+}
+reset();

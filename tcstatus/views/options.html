@@ -74,6 +74,6 @@
 		options.save();
 
 		$('#saved').fadeIn(300).delay(3000).fadeOut(1000);
-		chrome.extension.getBackgroundPage().client.stop().start();
+		chrome.extension.getBackgroundPage().reset();
 	});
 </script>
