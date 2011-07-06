@@ -46,7 +46,9 @@ http.on('request', function(req, res){
 
 function menu(){
 	process.stdout.write('\nmenu:\n');
-	process.stdout.write('1-2  - toggle status of builds\n');
+	for(var id in builds){
+		process.stdout.write(id + ' - toggle status\n');
+	}
 	process.stdout.write('exit - exits\n> ');
 };
 
