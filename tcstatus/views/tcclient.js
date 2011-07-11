@@ -29,10 +29,10 @@
 			url: this._options.getBaseUrl() + relativeUrl
 		});
 	};
-	
+
 	$$.TCClient.prototype._update = function(){
 		if(!this._running) { return; }
-		
+
 		var buildTypesUrl = this._options.getBaseUrl() + '/httpAuth/app/rest/buildTypes';
 		$.ajax(this._settingsFor('/httpAuth/app/rest/buildTypes'))
 		.success(function(data){
@@ -42,12 +42,12 @@
 			this._buildsToUpdate = data.buildType.slice();
 			this._updateBuildStatuses();
 		})
-		.error(function(){
-			console.error('Failed to retrieve build types');
-			if(!this._running) { return; }
-			this._onFailure('Failed to retrieve build types');
-			this._scheduleUpdate(this._options.retryInterval);
-		});
+	.error(function(){
+		console.error('Failed to retrieve build types from: ' + buildTypesUrl);
+		if(!this._running) { return; }
+		this._onFailure('Failed to retrieve build types');
+		this._scheduleUpdate(this._options.retryInterval);
+	});
 	};
 
 	$$.TCClient.prototype._updateBuildStatuses = function(){
@@ -57,24 +57,42 @@
 			return;
 		}
 		var buildTypeToCheck = this._buildsToUpdate.shift();
-		$.ajax(this._settingsFor(buildTypeToCheck.href + '/builds?count=1'))
+		$.ajax(this._settingsFor(buildTypeToCheck.href))
 		.success(function(data){
 			if(!this._running) { return; }
-			if(typeof data.build === 'undefined') { return; }
-			var build = data.build[0];
-			this._builds.forEach(function(buildType){
-				if(build.buildTypeId === buildType.id){
-					buildType.status = build.status === 'SUCCESS' ? 'success' : 'failure';
-				}
-			});
+			if(data.paused === true){
+				this._builds.forEach(function(buildType){
+					if(data.id === buildType.id){
+						buildType.status = 'paused';
+					}
+				});
+			} else {
+
+				$.ajax(this._settingsFor(data.builds.href + '?count=1'))
+				.success(function(data){
+					if(!this._running) { return; }
+					if(typeof data === 'undefined' || typeof data.build === 'undefined') { return; }
+					var build = data.build[0];
+					this._builds.forEach(function(buildType){
+						if(build.buildTypeId === buildType.id){
+							buildType.status = build.status === 'SUCCESS' ? 'success' : 'failure';
+							buildType.lastBuildNumber = build.number;
+						}
+					});
+				})
+				.error(function(){
+					console.error('Failed to retrieve build status from: ' + data.builds.href);
+					this._onFailure('Failed to retrieve build status of: ' + buildTypeToCheck.name);
+				});
+			}
 		})
 		.error(function(){
-			console.error('Failed to retrieve build status');
-			this._onFailure('Failed to retrieve build status');
+			console.error('Failed to retrieve build type from : ' + buildTypeToCheck.href);
+			this._onFailure('Failed to retreive information about: ' + buildTypeToCheck.name);
 		})
 		.complete(this._updateBuildStatuses);
 	};
-	
+
 	$$.TCClient.prototype._scheduleUpdate = function(timeout){
 		var self = this;
 		setTimeout(function(){ self._update(); }, timeout);
@@ -90,7 +108,7 @@
 		this._success = fn;
 		return this;
 	};
-	
+
 	$$.TCClient.prototype._onFailure = function(message){
 		this._failure(message);
 	};
@@ -100,4 +118,4 @@
 		return this;
 	};
 
-})(this, $);
+})(this, jQuery);
