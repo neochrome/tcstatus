@@ -5,6 +5,7 @@
 		this._requests = [];
 		this._onComplete = function(){};
 		this._processing = false;
+		this._error = false;
 	};
 
 	$$.Queue.prototype.add = function(url, success, error){
@@ -20,14 +21,16 @@
 	$$.Queue.prototype._process = function(){
 		if(this._processing === true) { return; }
 		if(this._requests.length === 0){
-			this._onComplete();
+			var withError = this._error;
+			this._error = false;
+			this._onComplete(withError);
 			return;
 		}
 		this._processing = true;
 		var request = this._requests.shift();
 		$.ajax($.extend(this._settings, {url:request.url}))
 		.success($.proxy(request.success, this))
-		.error($.proxy(request.error, this))
+		.error($.proxy(function(){ this._error = true; request.error(); }, this))
 		.complete($.proxy(function(){ this._processing = false; this._process(); }, this));
 	};
 
@@ -59,7 +62,9 @@
 			dataType: 'json',
 			username: this._options.username,
 			password: this._options.password
-		}).complete($.proxy(this._onSuccess, this));
+		}).complete($.proxy(function(withErrors){
+			if(!withErrors){ this._onSuccess(); }
+		}, this));
 		this._update();
 		return this;
 	};
@@ -94,7 +99,9 @@
 									$.proxy(function(data){
 										console.log('got builds');
 										console.log(data);
-										if(typeof data === 'undefined' || typeof data.build === 'undefined' || data.build.length === 0) { return; }
+										if(typeof data === 'undefined' || data === null) { return; }
+									 	if(typeof data.build === 'undefined' || data.build === null) { return; }
+									 	if(data.build.length === 0) { return; }
 										buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
 										buildType.lastBuildNumber = data.build[0].number;
 									}, this),
