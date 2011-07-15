@@ -9,7 +9,10 @@
 		<li class="${build.status}">
 		<a href="${build.webUrl}" title="${build.status}">
 			<span class="icon">&nbsp;</span>
-				${build.projectName} - ${build.name}
+			<span class="project">${build.projectName}</span>
+			<span class="configuration">${build.name}</span>
+			<span class="buildnumber">${build.lastBuildNumber}</span>
+			<span class="description">${build.description}</span>
 			</a>
 		</li>
 		{{/each}}

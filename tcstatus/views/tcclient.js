@@ -1,4 +1,44 @@
 (function($$, $){
+
+	$$.Queue = function(settings){
+		this._settings = settings;
+		this._requests = [];
+		this._onComplete = function(){};
+		this._processing = false;
+	};
+
+	$$.Queue.prototype.add = function(url, success, error){
+		this._requests.push({
+			url: url,
+			success: success,
+			error: error
+		});
+		this._process();
+		return this;
+	};
+
+	$$.Queue.prototype._process = function(){
+		if(this._processing === true) { return; }
+		if(this._requests.length === 0){
+			this._onComplete();
+			return;
+		}
+		this._processing = true;
+		var request = this._requests.shift();
+		$.ajax($.extend(this._settings, {url:request.url}))
+		.success($.proxy(request.success, this))
+		.error($.proxy(request.error, this))
+		.complete($.proxy(function(){ this._processing = false; this._process(); }, this));
+	};
+
+	$$.Queue.prototype.complete = function(fn){
+		this._onComplete = fn;
+		return this;
+	};
+
+
+
+
 	$$.TCClient = function(options){
 		this._options = options;
 		this._settings = { context: this,	dataType: 'json' };
@@ -7,12 +47,19 @@
 		this._running = false;
 		this._builds = [];
 		this._buildsToUpdate = [];
+		this._queue;
 	};
 
 	$$.TCClient.prototype.start = function(){
 		if(this._running) { return ; }
 		this._running = true;
 		this._options.load();
+		this._queue = new $$.Queue({
+			context: this,
+			dataType: 'json',
+			username: this._options.username,
+			password: this._options.password
+		}).complete($.proxy(this._onSuccess, this));
 		this._update();
 		return this;
 	};
@@ -22,75 +69,54 @@
 		return this;
 	};
 
-	$$.TCClient.prototype._settingsFor = function(relativeUrl){
-		return $.extend(this._settings, {
-			username: this._options.username,
-			password: this._options.password, 
-			url: this._options.getBaseUrl() + relativeUrl
-		});
-	};
-
 	$$.TCClient.prototype._update = function(){
 		if(!this._running) { return; }
 
-		var buildTypesUrl = this._options.getBaseUrl() + '/httpAuth/app/rest/buildTypes';
-		$.ajax(this._settingsFor('/httpAuth/app/rest/buildTypes'))
-		.success(function(data){
-			if(!this._running) { return; }
-			this._builds = data.buildType.slice();
-			this._builds.forEach(function(buildType){ buildType.status = 'unknown'; });
-			this._buildsToUpdate = data.buildType.slice();
-			this._updateBuildStatuses();
-		})
-	.error(function(){
-		console.error('Failed to retrieve build types from: ' + buildTypesUrl);
-		if(!this._running) { return; }
-		this._onFailure('Failed to retrieve build types');
-		this._scheduleUpdate(this._options.retryInterval);
-	});
-	};
-
-	$$.TCClient.prototype._updateBuildStatuses = function(){
-		if(!this._running) { return; }
-		if(this._buildsToUpdate.length === 0) {
-			this._onSuccess();
-			return;
-		}
-		var buildTypeToCheck = this._buildsToUpdate.shift();
-		$.ajax(this._settingsFor(buildTypeToCheck.href))
-		.success(function(data){
-			if(!this._running) { return; }
-			if(data.paused === true){
-				this._builds.forEach(function(buildType){
-					if(data.id === buildType.id){
-						buildType.status = 'paused';
-					}
-				});
-			} else {
-
-				$.ajax(this._settingsFor(data.builds.href + '?count=1'))
-				.success(function(data){
-					if(!this._running) { return; }
-					if(typeof data === 'undefined' || typeof data.build === 'undefined') { return; }
-					var build = data.build[0];
-					this._builds.forEach(function(buildType){
-						if(build.buildTypeId === buildType.id){
-							buildType.status = build.status === 'SUCCESS' ? 'success' : 'failure';
-							buildType.lastBuildNumber = build.number;
-						}
-					});
-				})
-				.error(function(){
-					console.error('Failed to retrieve build status from: ' + data.builds.href);
-					this._onFailure('Failed to retrieve build status of: ' + buildTypeToCheck.name);
-				});
-			}
-		})
-		.error(function(){
-			console.error('Failed to retrieve build type from : ' + buildTypeToCheck.href);
-			this._onFailure('Failed to retreive information about: ' + buildTypeToCheck.name);
-		})
-		.complete(this._updateBuildStatuses);
+		this._queue.add(
+			this._options.getBaseUrl() + '/httpAuth/app/rest/buildTypes',
+			$.proxy(function(data){
+				console.log('got build types');
+				console.log(data);
+				this._builds = data.buildType;
+				this._builds.forEach($.proxy(function(buildType){
+					buildType.status = 'unknown';
+					this._queue.add(
+						this._options.getBaseUrl() + buildType.href,
+						$.proxy(function(data){
+							console.log('got a build type');
+							console.log(data);
+							buildType.description = data.description;
+							if(data.paused === true){
+								buildType.status = 'paused';
+							} else {
+								this._queue.add(
+									this._options.getBaseUrl() + data.builds.href + '?count=1',
+									$.proxy(function(data){
+										console.log('got builds');
+										console.log(data);
+										if(typeof data === 'undefined' || typeof data.build === 'undefined' || data.build.length === 0) { return; }
+										buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
+										buildType.lastBuildNumber = data.build[0].number;
+									}, this),
+									$.proxy(function(){
+										console.error('failed reading builds');
+										this._onFailure('Failed to retreive build status for: ' + buildType.name);
+									}, this)
+								);
+							}
+						}, this),
+						$.proxy(function(){
+							console.error('failed reading build type');
+							this._onFailure('Failed to retrieve build type: ' + buildType.name);
+						}, this)
+					);
+				}, this));
+			}, this),
+			$.proxy(function(){
+				console.error('failed reading build types');
+				this._onFailure('Failed to retrieve build types');
+			}, this)
+		);
 	};
 
 	$$.TCClient.prototype._scheduleUpdate = function(timeout){
