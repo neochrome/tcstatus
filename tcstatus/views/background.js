@@ -82,9 +82,8 @@ var states = fsm({
 			this.POLLING();
 		},
 		failure: function(){
-			icon.disabled();
 			badge.unknown();
-			toast('Communication error', 'Couldn\'t retreive build statuses. Please check configuration options.');
+			webkitNotifications.createHTMLNotification('communication.error.html').show();
 			
 			this.ERROR();
 		}
@@ -109,6 +108,7 @@ var client = new TCClient(options)
 	states.failure();
 });
 
+icon.disabled();
 function reset(){
 	badge.unknown();
 	client.stop();

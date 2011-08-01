@@ -1,0 +1,27 @@
+<link href="styles.css" rel="Stylesheet" type="text/css"/>
+<div class="notification communication error">
+	<img src="../images/icon32.png" alt="logo"/>
+	<h1>Communication Error</h1>
+	<p>Couldn't retrieve build statuses. Please try again or check configuration options.</p>
+	<nav>
+		<button id="retry">Retry</button>
+		<button id="options">Options</button>
+		<button id="abort">Abort</button>
+	</nav>
+</div>
+<script src="../lib/jquery-1.6.1.min.js"></script>
+<script>
+	$('#retry').click(function(){
+		chrome.extension.getBackgroundPage().reset();
+		window.close();
+	});
+	$('#abort').click(function(){
+		window.close();
+	});
+	$('#options').click(function(){
+		chrome.tabs.create({
+			url:'views/options.html'
+		});
+		window.close();
+	});
+</script>
