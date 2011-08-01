@@ -1,0 +1,12 @@
+<link href="../../styles/main.css" rel="stylesheet"/>
+<div class="notification build failure">
+	<img src="../../images/icon32.png" alt="logo"/>
+	<h1>Failing build</h1>
+	<p id="name"></p>
+</div>
+<script src="../../lib/jquery-1.6.1.min.js"></script>
+<script>
+	var name = decodeURIComponent(location.search.split('=')[1].replace(/\+/g, ' '));
+	$('#name').text(name);
+	setTimeout(window.close, 10000);
+</script>
