@@ -1,4 +1,4 @@
-var a = require('./../tcstatus/views/fsm.js');
+var a = require('./../tcstatus/src/fsm.js');
 
 describe('a fsm', function(){
 	var machine;
