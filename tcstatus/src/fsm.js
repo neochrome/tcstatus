@@ -1,37 +1,34 @@
 (function($){
 	$.fsm = function(states){
 		var machine = {
-			_states: states,
-			toString: function(){ return this._state ? this._state.name : ''; }
+			_currentState: { name: ''},
+			toString: function(){ return this._currentState ? this._currentState.name : ''; }
 		};
 
 		if(!states){ return machine; }
 
-		for(var s in states){
-			machine[s] = select.call(machine, s);
-			machine._states[s].name = s;
-			for(var e in states[s]){
-				if(!machine[e]){
-					machine[e] = invoke.call(machine, e);
+		for(var stateName in states){
+			machine[stateName] = (function(stateName){
+				return function(){
+					this._currentState = states[stateName];
+					this._currentState.name = stateName;
+					return this;
+				};
+			})(stateName);
+
+			for(var eventName in states[stateName]){
+				if(!machine[eventName]){
+					machine[eventName] = (function(eventName){
+						return function(){
+							this._currentState[eventName].apply(this, arguments);
+							return this;
+						};
+					})(eventName);
 				}
 			}
 		}
 		return machine;
 	};
-
-	function select(state){
-		return function(){
-			this._state = this._states[state];
-			return this;
-		};
-	}
-
-	function invoke(event){
-		return function(){
-			this._state[event].apply(this, arguments);
-			return this;
-		};
-	}
 })(this);
 
 var exports;
