@@ -4,7 +4,12 @@
 body, input, select, textarea, button, p { font-family: 'Trebuchet MS'; font-size: .9em; }
 h1 { font-size: 1.5em; font-weight: bold; }
 .message { font-size: 1.2em; }
+
+#status nav a { font-size: .8em; text-transform: lowercase; text-decoration: none; }
 #status li a { text-decoration: none; }
+#status span.buildnumber { font-size: .7em; font-weight: bold; }
+#status span.project:after { content: ' \2022';  }
+#status span.description { font-size: .8em; font-style: italic;  }
 
 .notification h1 { font-size: 1em; }
 
@@ -14,9 +19,13 @@ body { padding: 0.5em; }
 li { display: block; }
 fieldset, input, button, legend, .message, .icon { border-radius: .3em; border-width: .1em; border-style: solid; }
 input, label { display: inline-block; }
-#status li { height: 1.7em; margin-bottom: .5em; white-space: nowrap; }
-#status li a { display: block; height:100%; border-radius: .3em; padding: .3em .5em; }
-#status span.icon { display: inline-block; width: 1.2em; height: 1.2em; margin-right: .5em; padding: .2em; text-align: center; }
+
+#status nav { text-align: right;  }
+#status li { white-space: nowrap; border-top: .1em solid; }
+#status li a { display: block; padding: .3em .5em; }
+#status span.icon { display: inline-block; width: 3em; margin-right: .5em; text-align: center; }
+#status span.buildnumber { display: block; padding: .5em; height: 1.2em; }
+#status span.description { display: block; margin-left: 5em; }
 
 #options fieldset { float: left; padding: .5em .9em; margin: 1em .5em; }
 #options legend { margin: 0 .2em; padding: .2em .4em; }
@@ -24,24 +33,25 @@ input, label { display: inline-block; }
 #options label { width: 10em; float: left; margin-top: .35em; white-space: nowrap; }
 #options input { width: 10em; padding: .1em .3em; float: left; }
 #options input[type=checkbox] { width: 1.2em; height: 1.2em; padding: 0; -khtml-appearance: none; }
-#options button {	clear: both; float: left; width: 10em; margin: 0 .5em; padding: .3em; }
-#options .message {	display: none; float:left; margin: 0 .5em; padding: .7em 2em; }
+#options button { clear: both; float: left; width: 10em; margin: 0 .5em; padding: .3em; }
+#options .message { display: none; float:left; margin: 0 .5em; padding: .7em 2em; }
 
 .notification img { float: left; margin: 0 .35em 0 0; }
 .notification nav { border-top: 1px solid; margin-top: .9em; padding-top: .5em; }
 .notification.communication.error nav #abort { float:right; }
 
 /* colors */
-#status li a { color: #000; }
-#status li a:hover {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#eee));
- 	-webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25);
-}
+#status nav a { color: #555; }
+#status li { border-color: #ccc; }
+#status li a, nav a { color: #000; }
+#status li a:hover { background-color: #eee; }
+#status span.project { color: #000;  }
+#status span.configuration { color: #555;  }
+#status span.description { color: #555;  }
 
-#status li span.icon { -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
-#status li a:hover span.icon { -webkit-box-shadow: none; }
+#status li a:hover span.icon { -webkit-box-shadow: 0 .1em .7em rgba(0,0,0,.25); }
 #status li.success span.icon {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cfc), to(#0c0)); 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cfc), to(#0c0));
 	border-color: rgba(100,190,100,.8);
 }
 #status li.failure span.icon { 
@@ -49,6 +59,10 @@ input, label { display: inline-block; }
 	border-color: rgba(190,100,100,.8); 
 }
 #status li.unknown span.icon { 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffc), to(#cc0)); 
+	border-color: rgba(160,160,160,.8); 
+}
+#status li.paused span.icon { 
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#ccc)); 
 	border-color: rgba(160,160,160,.8); 
 }
