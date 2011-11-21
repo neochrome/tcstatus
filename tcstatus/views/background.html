@@ -86,6 +86,8 @@
 				});
 				builds = updatedBuilds;
 
+				chrome.extension.sendRequest({action:'refreshed', builds:builds});
+
 				this.POLLING();
 			},
 			failure: function(){
@@ -124,4 +126,12 @@
 		client.start();
 	}
 	reset();
+
+	chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
+		switch(request.action){
+			case 'refresh':
+				reset();
+				break;
+		}
+	});
 </script>
