@@ -1,3 +1,89 @@
+var get = function(){
+};
+var TCClient = function(){
+	this.builds = [];
+	this.running = false;
+};
+var p = exports.TCClient.prototype = new EventEmitter();
+
+p.start = function(){
+	this.running = true;
+};
+
+p.stop = function(){
+	this.running = false;
+};
+
+p.update = function(){
+	this._getBuildTypes();
+	this._getRunningBuilds();
+};
+
+p._getBuildTypes = function(){
+	var self = this;
+	get('/httpAuth/app/rest/buildTypes')
+	.on('data', function(data){
+		self._buildTypes = data.buildType;
+		self._buildTypesMap = {};
+		_(self._buildTypes).each(function(buildType){
+			self._buildTypesMap[buildType.id] = buildType;
+			self._getBuildType(buildType);
+		});
+	});
+};
+
+p._getRunningBuilds = function(){
+	var self = this;
+	get('/httpAuth/app/rest/builds?locator=running:true')
+	.on('data', function(data){
+		_(data.build).each(function(build){
+			var buildType = self._buildTypesMap[build.buildTypeId];
+			if(!buildType){ return; }
+			buildType.status = 'building';
+			buildType.percentComplete = build.percentComplete;
+			buildType.lastBuildNumber = build.buildNumber;
+		}
+	});
+};
+
+p._getBuildType = function(buildType){
+	var self = this;
+	buildType.status = 'unknown';
+	get(buildType.href')
+	.on('data', function(data){
+		buildType.description = data.description;
+		if(data.paused === true){
+			buildType.status = 'paused';
+		} else {
+			self._getLastBuildFor(buildType);
+		}
+	});
+};
+
+p._getLastBuildFor = function(buildType){
+	get(data.builds.href + '?count=1')
+	.on('data', function(data){
+		if(typeof data === 'undefined' || data === null) { return; }
+		if(typeof data.build === 'undefined' || data.build === null) { return; }
+		if(data.build.length === 0) { return; }
+		buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
+		buildType.lastBuildNumber = data.build[0].number;
+	});
+};
+
+//self.builds = _(data.buildType).map(function(buildType){
+//	return {
+//		id: buildType.id,
+//		project: buildType.projectName,
+//		name: buildType.name,
+//		description: buildType.description,
+//		url: buildType.webUrl,
+//		status: 'unknown',
+//		lastBuildNumber: undefined,
+//		buildProgress: 100
+//	};
+//});
+
 (function($$, $){
 	$$.TCClient = function(options){
 		this._options = options;
@@ -29,7 +115,7 @@
 	$$.TCClient.prototype.stop = function(){
 		this._running = false;
 		return this;
-	};
+	
 
 	$$.TCClient.prototype._update = function(){
 		if(!this._running) { return; }
