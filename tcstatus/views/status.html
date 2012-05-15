@@ -3,7 +3,7 @@
 <script id="template" type="text/x-jquery-tmpl">
 	{{each(i, build) builds}}
 	<li class="${build.status}">
-	<a href="${build.webUrl}" title="${build.status}">
+	<a href="${build.webUrl}" title="${build.status}${build.status == 'building' ? ' : ' + build.percentComplete + '%' : ''}">
 		<span class="icon"><span class="buildnumber">${build.lastBuildNumber || '&nbsp;'}</span></span>
 		<span class="project">${build.projectName}</span>
 		<span class="configuration">${build.name}</span>

@@ -1,89 +1,3 @@
-var get = function(){
-};
-var TCClient = function(){
-	this.builds = [];
-	this.running = false;
-};
-var p = exports.TCClient.prototype = new EventEmitter();
-
-p.start = function(){
-	this.running = true;
-};
-
-p.stop = function(){
-	this.running = false;
-};
-
-p.update = function(){
-	this._getBuildTypes();
-	this._getRunningBuilds();
-};
-
-p._getBuildTypes = function(){
-	var self = this;
-	get('/httpAuth/app/rest/buildTypes')
-	.on('data', function(data){
-		self._buildTypes = data.buildType;
-		self._buildTypesMap = {};
-		_(self._buildTypes).each(function(buildType){
-			self._buildTypesMap[buildType.id] = buildType;
-			self._getBuildType(buildType);
-		});
-	});
-};
-
-p._getRunningBuilds = function(){
-	var self = this;
-	get('/httpAuth/app/rest/builds?locator=running:true')
-	.on('data', function(data){
-		_(data.build).each(function(build){
-			var buildType = self._buildTypesMap[build.buildTypeId];
-			if(!buildType){ return; }
-			buildType.status = 'building';
-			buildType.percentComplete = build.percentComplete;
-			buildType.lastBuildNumber = build.buildNumber;
-		}
-	});
-};
-
-p._getBuildType = function(buildType){
-	var self = this;
-	buildType.status = 'unknown';
-	get(buildType.href')
-	.on('data', function(data){
-		buildType.description = data.description;
-		if(data.paused === true){
-			buildType.status = 'paused';
-		} else {
-			self._getLastBuildFor(buildType);
-		}
-	});
-};
-
-p._getLastBuildFor = function(buildType){
-	get(data.builds.href + '?count=1')
-	.on('data', function(data){
-		if(typeof data === 'undefined' || data === null) { return; }
-		if(typeof data.build === 'undefined' || data.build === null) { return; }
-		if(data.build.length === 0) { return; }
-		buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
-		buildType.lastBuildNumber = data.build[0].number;
-	});
-};
-
-//self.builds = _(data.buildType).map(function(buildType){
-//	return {
-//		id: buildType.id,
-//		project: buildType.projectName,
-//		name: buildType.name,
-//		description: buildType.description,
-//		url: buildType.webUrl,
-//		status: 'unknown',
-//		lastBuildNumber: undefined,
-//		buildProgress: 100
-//	};
-//});
-
 (function($$, $){
 	$$.TCClient = function(options){
 		this._options = options;
@@ -92,7 +6,7 @@ p._getLastBuildFor = function(buildType){
 		this._failure = function(){};
 		this._running = false;
 		this._builds = [];
-		this._buildsToUpdate = [];
+		this._buildsMap = {};
 		this._queue;
 	};
 
@@ -115,7 +29,7 @@ p._getLastBuildFor = function(buildType){
 	$$.TCClient.prototype.stop = function(){
 		this._running = false;
 		return this;
-	
+	};	
 
 	$$.TCClient.prototype._update = function(){
 		if(!this._running) { return; }
@@ -127,6 +41,7 @@ p._getLastBuildFor = function(buildType){
 				console.log(data);
 				this._builds = data.buildType;
 				this._builds.forEach($.proxy(function(buildType){
+					this._buildsMap[buildType.id] = buildType;
 					buildType.status = 'unknown';
 					this._queue.add(
 						this._options.getBaseUrl() + buildType.href,
@@ -145,6 +60,7 @@ p._getLastBuildFor = function(buildType){
 										if(typeof data === 'undefined' || data === null) { return; }
 									 	if(typeof data.build === 'undefined' || data.build === null) { return; }
 									 	if(data.build.length === 0) { return; }
+										if(buildType.status !== 'unknown') { return; }
 										buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
 										buildType.lastBuildNumber = data.build[0].number;
 									}, this),
@@ -165,6 +81,27 @@ p._getLastBuildFor = function(buildType){
 			$.proxy(function(){
 				console.error('failed reading build types');
 				this._onFailure('Failed to retrieve build types');
+			}, this)
+		);
+		this._queue.add(
+			this._options.getBaseUrl() + '/httpAuth/app/rest/builds?locator=running:true',
+			$.proxy(function(data){
+				console.log('got running builds');
+				console.log(data);
+				if(typeof data === 'undefined' || typeof data.build === 'undefined') { return; }
+				data.build.forEach($.proxy(function(build){
+					console.log('running build: ', build);
+					var buildType = this._buildsMap[build.buildTypeId];
+					if(!buildType){ return; }
+					console.log('found matching running build', buildType);
+					buildType.status = 'building';
+					buildType.percentComplete = build.percentageComplete;
+					buildType.lastBuildNumber = build.number;
+				}, this));
+			}, this),
+			$.proxy(function(){
+				console.error('failed reading running builds');
+				this._onFailure('failed to read running builds');
 			}, this)
 		);
 	};
