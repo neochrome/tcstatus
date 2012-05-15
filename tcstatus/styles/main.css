@@ -58,13 +58,17 @@ input, label { display: inline-block; }
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fcc), to(#c00)); 
 	border-color: rgba(190,100,100,.8); 
 }
-#status li.unknown span.icon { 
+#status li.building span.icon { 
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffc), to(#cc0)); 
-	border-color: rgba(160,160,160,.8); 
+	border-color: rgba(190,190,100,.8); 
 }
 #status li.paused span.icon { 
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#ccc)); 
 	border-color: rgba(160,160,160,.8); 
+}
+#status li.unknown span.icon { 
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#cff), to(#0cc)); 
+	border-color: rgba(100,190,190,.8); 
 }
 
 #options fieldset, #options input, #options button, #options .message, #options legend { border-color: #ccc; }

@@ -6,7 +6,7 @@
 		this._failure = function(){};
 		this._running = false;
 		this._builds = [];
-		this._buildsToUpdate = [];
+		this._buildsMap = {};
 		this._queue;
 	};
 
@@ -29,7 +29,7 @@
 	$$.TCClient.prototype.stop = function(){
 		this._running = false;
 		return this;
-	};
+	};	
 
 	$$.TCClient.prototype._update = function(){
 		if(!this._running) { return; }
@@ -41,6 +41,7 @@
 				console.log(data);
 				this._builds = data.buildType;
 				this._builds.forEach($.proxy(function(buildType){
+					this._buildsMap[buildType.id] = buildType;
 					buildType.status = 'unknown';
 					this._queue.add(
 						this._options.getBaseUrl() + buildType.href,
@@ -59,6 +60,7 @@
 										if(typeof data === 'undefined' || data === null) { return; }
 									 	if(typeof data.build === 'undefined' || data.build === null) { return; }
 									 	if(data.build.length === 0) { return; }
+										if(buildType.status !== 'unknown') { return; }
 										buildType.status = data.build[0].status === 'SUCCESS' ? 'success' : 'failure';
 										buildType.lastBuildNumber = data.build[0].number;
 									}, this),
@@ -79,6 +81,27 @@
 			$.proxy(function(){
 				console.error('failed reading build types');
 				this._onFailure('Failed to retrieve build types');
+			}, this)
+		);
+		this._queue.add(
+			this._options.getBaseUrl() + '/httpAuth/app/rest/builds?locator=running:true',
+			$.proxy(function(data){
+				console.log('got running builds');
+				console.log(data);
+				if(typeof data === 'undefined' || typeof data.build === 'undefined') { return; }
+				data.build.forEach($.proxy(function(build){
+					console.log('running build: ', build);
+					var buildType = this._buildsMap[build.buildTypeId];
+					if(!buildType){ return; }
+					console.log('found matching running build', buildType);
+					buildType.status = 'building';
+					buildType.percentComplete = build.percentageComplete;
+					buildType.lastBuildNumber = build.number;
+				}, this));
+			}, this),
+			$.proxy(function(){
+				console.error('failed reading running builds');
+				this._onFailure('failed to read running builds');
 			}, this)
 		);
 	};
