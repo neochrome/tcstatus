@@ -8,7 +8,7 @@
 		"32":"images/icon32.png",
 		"128":"images/icon128.png"
 	},
-	"background_page":"views/background.html",
+	"background":"views/background.html",
 	"permissions":[
 		"http://*/",
 		"tabs",
@@ -18,5 +18,6 @@
 		"default_icon":"images/icon32.png",
 		"default_popup":"views/status.html"
 	},
-	"options_page":"views/options.html"
+	"options_page":"views/options.html",
+  "manifest_version": 2
 }
