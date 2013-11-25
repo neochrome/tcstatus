@@ -1,0 +1,10 @@
+{
+	"boss": true,
+	"curly": true,
+	"quotmark": "single",
+	"smarttabs": true,
+	"trailing": true,
+	"undef": true,
+	"unused": true,
+	"node": true
+}

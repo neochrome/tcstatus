@@ -1,0 +1,34 @@
+{
+	"manifest_version": 2,
+	"name": "TeamCity Status Notifier",
+	"version": "0.2.0",
+	"description": "Shows the current status of build configurations on your TeamCity build server.",
+	"author": "Johan Stenqvist",
+	"update_url": "https://github.com/neochrome/tcstatus/raw/master/updates.xml",
+	"homepage_url": "https://github.com/neochrome/tcstatus",
+	"icons": {
+		"32": "images/icon32.png",
+		"128": "images/icon128.png"
+	},
+	"permissions": [
+		"background",
+		"http://*/",
+		"tts",
+		"notifications"
+	],
+	"browser_action": {
+		"default_icon": "images/icon32.png",
+		"default_popup": "views/status.html",
+		"default_title": "TeamCity Status Notifier"
+	},
+	"options_page": "views/options.html",
+	"background": {
+		"scripts": [
+			"lib/angular/angular.js",
+			"js/backgroundModule.js",
+			"js/sharedModule.js",
+			"js/chromeModule.js"
+		],
+		"persistent": true
+	}
+}

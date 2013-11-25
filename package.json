@@ -1,0 +1,21 @@
+{
+  "name": "tcstatus",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "test": "grunt",
+    "start": "grunt watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.11",
+    "grunt-jsonlint": "~1.0.4",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-jasmine-node": "~0.1.0",
+    "grunt-bump": "0.0.11",
+    "bower": "~1.2.7"
+  },
+  "optionalDependencies": {}
+}

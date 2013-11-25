@@ -1,0 +1,9 @@
+{
+  "name": "tcstatus",
+  "version": "0.2.0",
+  "private": true,
+  "dependencies": {
+    "simple-fsm": "~1.0.2",
+    "angular": "~1.2.1"
+  }
+}

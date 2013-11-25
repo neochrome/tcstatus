@@ -1,0 +1,15 @@
+{
+	"curly": true,
+	"loopfunc": true,
+	"quotmark": "single",
+	"smarttabs": true,
+	"trailing": true,
+	"undef": true,
+	"unused": true,
+	"globals": {
+		"requirejs": true,
+		"require": true,
+		"angular": true,
+		"chrome" : true
+	}
+}
