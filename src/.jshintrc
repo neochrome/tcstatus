@@ -10,6 +10,7 @@
 		"requirejs": true,
 		"require": true,
 		"angular": true,
-		"chrome" : true
+		"chrome" : true,
+		"localStorage": true
 	}
 }

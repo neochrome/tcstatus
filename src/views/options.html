@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" ng-app="options">
+	<head>
+		<link href="../css/options.css" type="text/css" rel="stylesheet"/>
+		<script src="../lib/angular/angular.js"></script>
+		<script src="../js/chromeModule.js"></script>
+		<script src="../js/sharedModule.js"></script>
+		<script src="../js/optionsModule.js"></script>
+		<title>TC Status :: Options</title>
+	</head>
+	<body>
+		<form id="options" ng-controller="OptionsController">
+			<fieldset>
+				<legend>Connection</legend>
+				<label for="ssl">
+					<input id="ssl" type="checkbox" /> Use SSL
+				</label>
+				<label for="host">
+					Host <input id="host" type="text" pattern="\w+[\w-]*(?:\.\w+[\w-]*)*" required="required" placeholder="e.g: tc.mydomain.com" />
+				</label>
+				<label for="port">
+					Port <input id="port" type="text" pattern="\d+" placeholder="e.g: 80 or 443" />
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Connect as</legend>
+				<label for="guest">
+					<input id="guest" type="checkbox" /> Guest
+				</label>
+				or
+				<label for="username">
+					Username <input id="username" type="text" />
+				</label>
+				<label for="password">
+					Password <input id="password" type="password" />
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Update</legend>
+				<label for="interval0">
+					<input id="interval0" name="interval" value="0" type="radio" /> Never
+				</label>
+				<label for="interval1">
+					<input id="interval1" name="interval" value="1" type="radio" /> Every second
+				</label>
+				<label for="interval2">
+					<input id="interval2" name="interval" value="10" type="radio" /> Every ten seconds
+				</label>
+				<label for="interval3">
+					<input id="interval3" name="interval" value="60" type="radio" /> Every minute
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Last log messages</legend>
+			</fieldset>
+			<button>Save</button>
+			<button>Cancel</button>
+		</form>
+	</body>
+</html>

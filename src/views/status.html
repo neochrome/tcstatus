@@ -1,7 +1,19 @@
 <!doctype html>
-<html lang="en">
-	<head></head>
-	<body>
-		<h1>Hello</h1>
+<html lang="en" ng-app="status">
+	<head>
+		<link href="../css/status.css" type="text/css" rel="stylesheet"/>
+		<script src="../lib/angular/angular.js"></script>
+		<script src="../js/chromeModule.js"></script>
+		<script src="../js/sharedModule.js"></script>
+		<script src="../js/statusModule.js"></script>
+	</head>
+	<body ng-controller="StatusController">
+		<header>Last updated: <time>{{updated}}</time></header>
+		<ul id="status">
+			<li ng-repeat="project in projects" class="{{project.status}} {{project.activity}}">
+				<a href="{{project.url}}">{{project.name}}</a>
+				<i class="{{project.activity}}"></i>
+			</li>
+		</ul>
 	</body>
 </html>

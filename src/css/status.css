@@ -1,0 +1,18 @@
+@import url('reset.css');
+
+li { white-space: nowrap; }
+a { color: black; text-decoration: none; display: inline-block; padding: .5em 1.5em; margin-right: 1.1em; }
+li:hover a { background-color: rgba(255,255,255,.5); }
+
+li.success { background-color: green; }
+li.failure { background-color: red; }
+li.unknown { background-color: gray; }
+
+i { display: inline-block; text-align: center; width: 1em; margin-right: 0.2em; }
+i.sleeping:before { content: 'p'; }
+i.building:before { content: 'b'; }
+i.checking:before { content: 'c'; }
+
+header { font-size: .5em; white-space: nowrap; color: lightgray; }
+
+body { font-size: 1.5em; font-family: verdana; }

@@ -16,6 +16,7 @@
 		"tts",
 		"notifications"
 	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"browser_action": {
 		"default_icon": "images/icon32.png",
 		"default_popup": "views/status.html",
@@ -25,9 +26,9 @@
 	"background": {
 		"scripts": [
 			"lib/angular/angular.js",
-			"js/backgroundModule.js",
+			"js/chromeModule.js",
 			"js/sharedModule.js",
-			"js/chromeModule.js"
+			"js/backgroundModule.js"
 		],
 		"persistent": true
 	}

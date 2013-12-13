@@ -1,11 +1,16 @@
 angular.module('chrome', ['ng'])
-.service('chrome.MessagingService', function () {
-	this.send = function (message) {
-		chrome.runtime.sendMessage(message);
+.service('chrome.EventService', function () {
+	this.emit = function (eventName) {
+		if (typeof eventName === 'undefined') { throw 'Missing argument: eventName'; }
+		var args = [].splice.call(arguments, 1);
+		chrome.runtime.sendMessage({eventName: eventName, args: args});
 	};
-	this.on = function (fn) {
+	this.on = function (eventName, fn) {
+		if (typeof eventName === 'undefined') { throw 'Missing argument: eventName'; }
+		if (typeof fn !== 'function') { throw 'Argument error: fn must be a function'; }
 		chrome.runtime.onMessage.addListener(function (message) {
-			fn(message);
+			if (message.eventName !== eventName) { return; }
+			fn.apply(null, message.args);
 		});
 	};
 });
